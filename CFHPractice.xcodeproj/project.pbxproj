@@ -11,7 +11,9 @@
 		672C32FB21C4A2BD0042B40F /* DTGetPlantDataListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 672C32FA21C4A2BD0042B40F /* DTGetPlantDataListRequest.m */; };
 		672C32FE21C4A2EB0042B40F /* DTGetPlantDataListResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 672C32FD21C4A2EB0042B40F /* DTGetPlantDataListResponse.m */; };
 		672C330121C4A3010042B40F /* DTPlantInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 672C330021C4A3010042B40F /* DTPlantInfo.m */; };
-		672C330821C4AB040042B40F /* CFHBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 672C330721C4AB040042B40F /* CFHBaseViewController.m */; };
+		672C330D21C4CBDA0042B40F /* CFHArrayDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 672C330C21C4CBDA0042B40F /* CFHArrayDataSource.m */; };
+		672C331421C4CDEB0042B40F /* CFHMainTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 672C331221C4CDEB0042B40F /* CFHMainTableViewCell.m */; };
+		672C331521C4CDEB0042B40F /* CFHMainTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 672C331321C4CDEB0042B40F /* CFHMainTableViewCell.xib */; };
 		6776287F21C3FB8E00321E03 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6776287E21C3FB8E00321E03 /* AppDelegate.m */; };
 		6776288721C3FB9000321E03 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6776288621C3FB9000321E03 /* Assets.xcassets */; };
 		6776288A21C3FB9000321E03 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6776288821C3FB9000321E03 /* LaunchScreen.storyboard */; };
@@ -30,8 +32,11 @@
 		672C32FD21C4A2EB0042B40F /* DTGetPlantDataListResponse.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DTGetPlantDataListResponse.m; sourceTree = "<group>"; };
 		672C32FF21C4A3010042B40F /* DTPlantInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DTPlantInfo.h; sourceTree = "<group>"; };
 		672C330021C4A3010042B40F /* DTPlantInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DTPlantInfo.m; sourceTree = "<group>"; };
-		672C330621C4AB040042B40F /* CFHBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFHBaseViewController.h; sourceTree = "<group>"; };
-		672C330721C4AB040042B40F /* CFHBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFHBaseViewController.m; sourceTree = "<group>"; };
+		672C330B21C4CBDA0042B40F /* CFHArrayDataSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CFHArrayDataSource.h; sourceTree = "<group>"; };
+		672C330C21C4CBDA0042B40F /* CFHArrayDataSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CFHArrayDataSource.m; sourceTree = "<group>"; };
+		672C331121C4CDEB0042B40F /* CFHMainTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CFHMainTableViewCell.h; sourceTree = "<group>"; };
+		672C331221C4CDEB0042B40F /* CFHMainTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CFHMainTableViewCell.m; sourceTree = "<group>"; };
+		672C331321C4CDEB0042B40F /* CFHMainTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CFHMainTableViewCell.xib; sourceTree = "<group>"; };
 		6776287A21C3FB8E00321E03 /* CFHPractice.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CFHPractice.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6776287D21C3FB8E00321E03 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		6776287E21C3FB8E00321E03 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -88,13 +93,23 @@
 			path = GetPlantDataList;
 			sourceTree = "<group>";
 		};
-		672C330521C4AB040042B40F /* Base */ = {
+		672C330921C4CAF60042B40F /* MainTableViewCell */ = {
 			isa = PBXGroup;
 			children = (
-				672C330621C4AB040042B40F /* CFHBaseViewController.h */,
-				672C330721C4AB040042B40F /* CFHBaseViewController.m */,
+				672C331121C4CDEB0042B40F /* CFHMainTableViewCell.h */,
+				672C331221C4CDEB0042B40F /* CFHMainTableViewCell.m */,
+				672C331321C4CDEB0042B40F /* CFHMainTableViewCell.xib */,
 			);
-			path = Base;
+			path = MainTableViewCell;
+			sourceTree = "<group>";
+		};
+		672C330A21C4CBB60042B40F /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				672C330B21C4CBDA0042B40F /* CFHArrayDataSource.h */,
+				672C330C21C4CBDA0042B40F /* CFHArrayDataSource.m */,
+			);
+			path = Component;
 			sourceTree = "<group>";
 		};
 		6776287121C3FB8E00321E03 = {
@@ -118,6 +133,7 @@
 		6776287C21C3FB8E00321E03 /* CFHPractice */ = {
 			isa = PBXGroup;
 			children = (
+				672C330A21C4CBB60042B40F /* Component */,
 				672C32F321C4A04F0042B40F /* WebService */,
 				6776289321C3FBF200321E03 /* UI */,
 				6776287D21C3FB8E00321E03 /* AppDelegate.h */,
@@ -133,7 +149,7 @@
 		6776289321C3FBF200321E03 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				672C330521C4AB040042B40F /* Base */,
+				672C330921C4CAF60042B40F /* MainTableViewCell */,
 				6776289421C3FBF200321E03 /* MainViewController */,
 			);
 			path = UI;
@@ -218,6 +234,7 @@
 			files = (
 				6776289A21C3FC0E00321E03 /* CFHMainViewController.xib in Resources */,
 				6776288A21C3FB9000321E03 /* LaunchScreen.storyboard in Resources */,
+				672C331521C4CDEB0042B40F /* CFHMainTableViewCell.xib in Resources */,
 				6776288721C3FB9000321E03 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -269,10 +286,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				672C32FE21C4A2EB0042B40F /* DTGetPlantDataListResponse.m in Sources */,
-				672C330821C4AB040042B40F /* CFHBaseViewController.m in Sources */,
 				672C32FB21C4A2BD0042B40F /* DTGetPlantDataListRequest.m in Sources */,
+				672C331421C4CDEB0042B40F /* CFHMainTableViewCell.m in Sources */,
 				6776288D21C3FB9000321E03 /* main.m in Sources */,
 				6776289921C3FC0E00321E03 /* CFHMainViewController.m in Sources */,
+				672C330D21C4CBDA0042B40F /* CFHArrayDataSource.m in Sources */,
 				6776287F21C3FB8E00321E03 /* AppDelegate.m in Sources */,
 				672C330121C4A3010042B40F /* DTPlantInfo.m in Sources */,
 			);
