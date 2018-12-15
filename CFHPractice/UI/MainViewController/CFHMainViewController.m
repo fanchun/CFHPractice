@@ -13,7 +13,7 @@
 
 static const NSInteger DTGetPlantDataDefaultLimit = 20;
 
-@interface CFHMainViewController () <UITableViewDataSource>
+@interface CFHMainViewController () <UITableViewDataSource, UIScrollViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *mTableView;
 @property (weak, nonatomic) IBOutlet UIView *mBottomView;
@@ -22,12 +22,14 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
 
 
 @property (assign, nonatomic) NSUInteger mTotalPlantDataCount;
+@property (assign, nonatomic) NSUInteger mCurrentPlantDataOffset;
 @end
 
 @implementation CFHMainViewController
 
 - (void)initParameters {
     _mTotalPlantDataCount = 0;
+    _mCurrentPlantDataOffset = 0;
 }
 
 #pragma mark - Property
@@ -36,6 +38,12 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
         _mDataResultsArray = [NSMutableArray array];
     }
     return _mDataResultsArray;
+}
+
+- (void)setMCurrentPlantDataOffset:(NSUInteger)currentPlantDataOffset {
+    if (currentPlantDataOffset > _mCurrentPlantDataOffset) {
+        _mCurrentPlantDataOffset = currentPlantDataOffset;
+    }
 }
 
 #pragma mark - UIViewController
@@ -47,7 +55,19 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self getPlantDataListWithLimit:DTGetPlantDataDefaultLimit offset:0];
+    [self getPlantDataListWithLimit:DTGetPlantDataDefaultLimit];
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
+    if (velocity.y > 0){
+        NSUInteger remainDataCount = (self.mTotalPlantDataCount - self.mCurrentPlantDataOffset);
+        if (remainDataCount > 0) {
+            NSUInteger limit = (remainDataCount > DTGetPlantDataDefaultLimit) ? DTGetPlantDataDefaultLimit : remainDataCount;
+            [self getPlantDataListWithLimit:limit];
+        }
+    }
 }
 
 #pragma mark - UITableViewDataSource
@@ -61,7 +81,6 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
     UITableViewCell *cell = [self.mTableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if(cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
-        
     }
 
     DTPlantInfo *plantInfo = self.mDataResultsArray[indexPath.row];
@@ -73,14 +92,12 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
 
 #pragma mark - WebService API
 
-- (void)getPlantDataListWithLimit:(NSUInteger)limit offset:(NSUInteger)offset {
-    [SVProgressHUD show];
-    
-    DTGetPlantDataListRequest *request = [[DTGetPlantDataListRequest alloc] initWithLimit:limit offset:offset];
+- (void)getPlantDataListWithLimit:(NSUInteger)limit {
+//    [SVProgressHUD show];
+    DTGetPlantDataListRequest *request = [[DTGetPlantDataListRequest alloc] initWithLimit:limit offset:self.mCurrentPlantDataOffset];
     [request getWSSuccess:^(DTGetPlantDataListResponse * _Nonnull response) {
         
-        [SVProgressHUD dismiss];
-        
+        //[SVProgressHUD dismiss];
         self.mTotalPlantDataCount = response.count;
         
         NSMutableArray *arIndexPaths = [NSMutableArray arrayWithCapacity:response.count];
@@ -91,14 +108,20 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
         
         [self.mDataResultsArray addObjectsFromArray:response.plantInfos];
         [self.mTableView beginUpdates];
-        [self.mTableView insertRowsAtIndexPaths:arIndexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self.mTableView insertRowsAtIndexPaths:arIndexPaths withRowAnimation:UITableViewRowAnimationNone];
         [self.mTableView endUpdates];
+        
+//        NSLog(@"====================");
+//        NSLog(@"全部共%lu筆", self.mTotalPlantDataCount);
+//        NSLog(@"已顯示%lu筆", self.mDataResultsArray.count);
+//        NSLog(@"====================");
         
     } failure:^(NSError * _Nonnull error) {
         
         [SVProgressHUD showErrorWithStatus:error.description];
         
     }];
+    self.mCurrentPlantDataOffset += limit;
 }
 
 @end
