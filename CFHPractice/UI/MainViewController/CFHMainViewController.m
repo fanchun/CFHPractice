@@ -50,7 +50,7 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
                               placeholderImage:nil
                                        success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
                                            
-                                           weakCell.pictureImageView.image = plantInfo.pictureImage;
+                                           weakCell.pictureImageView.image = image;
                                            
                                        } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
                                            
@@ -66,6 +66,7 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
     
     self.mTableView.rowHeight = UITableViewAutomaticDimension;
     self.mTableView.estimatedRowHeight = CFHMainTableViewCellSize.height;
+    self.mTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
 }
 
 #pragma mark - Property
