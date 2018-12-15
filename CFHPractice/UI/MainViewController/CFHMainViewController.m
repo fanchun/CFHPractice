@@ -12,6 +12,7 @@
 #import "CFHMainTableViewCell.h"
 
 #import <SVProgressHUD.h>
+#import <UIImageView+AFNetworking.h>
 
 static const NSInteger DTGetPlantDataDefaultLimit = 20;
 
@@ -39,8 +40,21 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
     
     CFHTableViewCellConfigureBlock configureCell = ^(CFHMainTableViewCell *cell, DTPlantInfo *plantInfo) {
         cell.nameLabel.text = plantInfo.nameCh;
-        cell.LocationLabel.text = plantInfo.location;
+        cell.locationLabel.text = plantInfo.location;
         cell.featureLabel.text = plantInfo.feature;
+        
+        __weak CFHMainTableViewCell *weakCell = cell;
+        
+        NSURLRequest *imageRequest =[NSURLRequest requestWithURL:[NSURL URLWithString:plantInfo.pictureURL]];
+        [cell.imageView setImageWithURLRequest:imageRequest
+                              placeholderImage:nil
+                                       success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
+                                           
+                                           weakCell.pictureImageView.image = plantInfo.pictureImage;
+                                           
+                                       } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
+                                           
+                                       }];
     };
     
     self.mArrayDataSource = [[CFHArrayDataSource alloc] initWithItems:self.mDataResultsArray
@@ -106,7 +120,6 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
         
 //        [self.mDataResultsArray addObjectsFromArray:response.plantInfos];
 //        [self.mTableView reloadData];
-        
         
         NSMutableArray *arIndexPaths = [NSMutableArray arrayWithCapacity:response.count];
         NSUInteger currentDataCount = self.mDataResultsArray.count;

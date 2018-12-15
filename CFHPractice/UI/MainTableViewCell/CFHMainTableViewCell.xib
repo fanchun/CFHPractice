@@ -22,14 +22,14 @@
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="KuC-yA-Nhk">
                         <rect key="frame" x="16" y="11" width="90" height="60"/>
                         <constraints>
-                            <constraint firstAttribute="width" secondItem="KuC-yA-Nhk" secondAttribute="height" multiplier="3:2" id="cxI-np-EcO"/>
+                            <constraint firstAttribute="width" secondItem="KuC-yA-Nhk" secondAttribute="height" multiplier="3:2" id="nBZ-xL-86L"/>
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="czo-zb-rwc">
                         <rect key="frame" x="114" y="13" width="190" height="21"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="21" id="VjT-rV-Dju"/>
+                            <constraint firstAttribute="height" constant="21" id="IiJ-mY-hWL"/>
                         </constraints>
                         <fontDescription key="fontDescription" name="PingFangTC-Semibold" family="PingFang TC" pointSize="17"/>
                         <color key="textColor" red="0.18060460689999999" green="0.62548083070000005" blue="0.30723148579999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -38,40 +38,41 @@
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cNv-5u-CfA">
                         <rect key="frame" x="114" y="40" width="190" height="31"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <fontDescription key="fontDescription" name="PingFangTC-Semibold" family="PingFang TC" pointSize="14"/>
+                        <fontDescription key="fontDescription" name="PingFangTC-Semibold" family="PingFang TC" pointSize="12"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ktu-iI-caa">
                         <rect key="frame" x="16" y="79" width="288" height="50"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="14"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="Ktu-iI-caa" firstAttribute="top" secondItem="cNv-5u-CfA" secondAttribute="bottom" constant="8" id="2Ln-hs-uab"/>
-                    <constraint firstItem="czo-zb-rwc" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="2" id="4Ya-UZ-F8O"/>
-                    <constraint firstItem="KuC-yA-Nhk" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="5CA-Kl-Lqd"/>
-                    <constraint firstItem="KuC-yA-Nhk" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="7pt-4l-jb0"/>
-                    <constraint firstItem="Ktu-iI-caa" firstAttribute="top" secondItem="KuC-yA-Nhk" secondAttribute="bottom" constant="8" id="GMJ-1W-fWl"/>
-                    <constraint firstAttribute="trailing" secondItem="KuC-yA-Nhk" secondAttribute="trailing" constant="214" id="QmF-2y-QFv"/>
-                    <constraint firstItem="cNv-5u-CfA" firstAttribute="top" secondItem="czo-zb-rwc" secondAttribute="bottom" constant="6" id="ati-8Y-Zzm"/>
-                    <constraint firstItem="czo-zb-rwc" firstAttribute="leading" secondItem="KuC-yA-Nhk" secondAttribute="trailing" constant="8" id="flf-lL-4HP"/>
-                    <constraint firstItem="cNv-5u-CfA" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="iFh-tf-QMa"/>
-                    <constraint firstItem="cNv-5u-CfA" firstAttribute="leading" secondItem="KuC-yA-Nhk" secondAttribute="trailing" constant="8" id="jiJ-TW-dHZ"/>
-                    <constraint firstItem="czo-zb-rwc" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="uJZ-Y7-gIX"/>
-                    <constraint firstItem="Ktu-iI-caa" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="uVP-pU-KED"/>
-                    <constraint firstItem="Ktu-iI-caa" firstAttribute="bottom" secondItem="H2p-sc-9uM" secondAttribute="bottomMargin" constant="-4" id="yPz-tH-GXz"/>
-                    <constraint firstItem="Ktu-iI-caa" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="zj2-aA-HSO"/>
+                    <constraint firstItem="czo-zb-rwc" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="1yu-vX-Q0n"/>
+                    <constraint firstItem="czo-zb-rwc" firstAttribute="top" secondItem="KuC-yA-Nhk" secondAttribute="top" constant="2" id="97s-fN-sB2"/>
+                    <constraint firstItem="KuC-yA-Nhk" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="B4Z-N8-gYD"/>
+                    <constraint firstItem="cNv-5u-CfA" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="FFN-dL-bm8"/>
+                    <constraint firstItem="Ktu-iI-caa" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="OWF-Fy-gRq"/>
+                    <constraint firstItem="KuC-yA-Nhk" firstAttribute="width" secondItem="H2p-sc-9uM" secondAttribute="width" multiplier="90:320" id="PRd-ZA-iBT"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="Ktu-iI-caa" secondAttribute="bottom" constant="4" id="YKC-TV-20O"/>
+                    <constraint firstItem="czo-zb-rwc" firstAttribute="leading" secondItem="KuC-yA-Nhk" secondAttribute="trailing" constant="8" id="hMX-yC-4zR"/>
+                    <constraint firstItem="Ktu-iI-caa" firstAttribute="top" secondItem="cNv-5u-CfA" secondAttribute="bottom" constant="8" id="nXn-FS-FI8"/>
+                    <constraint firstItem="cNv-5u-CfA" firstAttribute="top" secondItem="czo-zb-rwc" secondAttribute="bottom" constant="6" id="oVb-cJ-l2V"/>
+                    <constraint firstItem="Ktu-iI-caa" firstAttribute="top" secondItem="KuC-yA-Nhk" secondAttribute="bottom" constant="8" id="pW1-Qj-ZRr"/>
+                    <constraint firstItem="KuC-yA-Nhk" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="s7A-PW-hNa"/>
+                    <constraint firstItem="Ktu-iI-caa" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="tV9-2D-1sw"/>
+                    <constraint firstItem="cNv-5u-CfA" firstAttribute="leading" secondItem="KuC-yA-Nhk" secondAttribute="trailing" constant="8" id="zK0-xi-gF4"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="aW0-zy-SZf"/>
             <connections>
-                <outlet property="LocationLabel" destination="cNv-5u-CfA" id="Jux-GK-vud"/>
-                <outlet property="featureLabel" destination="Ktu-iI-caa" id="D0F-eW-PPu"/>
+                <outlet property="featureLabel" destination="Ktu-iI-caa" id="IKE-lI-yqP"/>
+                <outlet property="locationLabel" destination="cNv-5u-CfA" id="bdy-vB-ZJD"/>
                 <outlet property="nameLabel" destination="czo-zb-rwc" id="Cpr-cW-M9k"/>
+                <outlet property="pictureImageView" destination="KuC-yA-Nhk" id="rdr-z4-WqL"/>
             </connections>
             <point key="canvasLocation" x="41.600000000000001" y="46.776611694152926"/>
         </tableViewCell>
