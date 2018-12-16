@@ -62,12 +62,18 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
 
 - (void)closeTopView {
     self.mDirection = CFHScrollableDirectionNone;
-    self.mTableViewTopConstraint.constant = 44;
+    self.mTableViewTopConstraint.constant = [self minTopViewHeight];
+    
+    self.mBottomView.alpha = 0;
+    self.mFrontView.alpha = 1;
 }
 
 - (void)openTopView {
     _mDirection = CFHScrollableDirectionNone;
     self.mTableViewTopConstraint.constant = self.mOriginalTopConstraint;
+    
+    self.mBottomView.alpha = 1;
+    self.mFrontView.alpha = 0;
 }
 
 - (void)initParameters {
@@ -110,7 +116,6 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
     self.mTableView.estimatedRowHeight = CFHMainTableViewCellSize.height;
     self.mTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
-    
     self.mPanGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
     self.mPanGesture.maximumNumberOfTouches = 1;
     self.mPanGesture.delegate = self;
@@ -152,6 +157,7 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
     [self setupTableView];
     
     self.mOriginalTopConstraint = self.mTableViewTopConstraint.constant;
+    [self openTopView];
     
     //self.mFrontView.targetScrollView = self.mTableView;
 }
@@ -181,6 +187,7 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
 
         self.mTotalPlantDataCount = response.count;
         
+        self.mFrontViewLabel.text = [NSString stringWithFormat:@"總共%lu筆", (unsigned long)self.mTotalPlantDataCount];
 //        [self.mDataResultsArray addObjectsFromArray:response.plantInfos];
 //        [self.mTableView reloadData];
         
@@ -194,10 +201,10 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
             [self.mTableView insertRowsAtIndexPaths:arIndexPaths withRowAnimation:UITableViewRowAnimationNone];
         }];
         
-//        NSLog(@"====================");
-//        NSLog(@"全部共%lu筆", self.mTotalPlantDataCount);
-//        NSLog(@"已顯示%lu筆", self.mDataResultsArray.count);
-//        NSLog(@"====================");
+        NSLog(@"====================");
+        NSLog(@"全部共%lu筆", self.mTotalPlantDataCount);
+        NSLog(@"已顯示%lu筆", self.mDataResultsArray.count);
+        NSLog(@"====================");
         
     } failure:^(NSError * _Nonnull error) {
         
@@ -215,13 +222,13 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
     
     //    NSLog(@"TransacitonY = %f & state = %ld", transactionY, (long)gesture.state);
     //    NSLog(@"ContentOffsetY = %f", self.targetScrollView.contentOffset.y);
-    if (gesture.state == UIGestureRecognizerStateBegan) {
-        
+    if (gesture.state == UIGestureRecognizerStateBegan)
+    {
         _mPanOffsetY = transactionY;
         _mDirection = CFHScrollableDirectionNone;
-        
-    }else if (gesture.state == UIGestureRecognizerStateChanged) {
-        
+    }
+    else if (gesture.state == UIGestureRecognizerStateChanged)
+    {
         CGFloat deltaY = (transactionY - _mPanOffsetY);
         if (deltaY > 0.0) {
             _mDirection = CFHScrollableDirectionDown;
@@ -245,6 +252,15 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
         }else {
             // 移動中
             self.mTableViewTopConstraint.constant = updateTopConstraint;
+            
+            // Animation
+            // BottomView
+            CGFloat bottomViewAlpha = ((updateTopConstraint - [self minTopViewHeight]) / (self.mOriginalTopConstraint- [self minTopViewHeight]));
+            self.mBottomView.alpha = bottomViewAlpha;
+            
+            // FrontViewAlpha
+            CGFloat frontViewAlpha = (self.mOriginalTopConstraint/2 - updateTopConstraint) / (self.mOriginalTopConstraint/2 - [self minTopViewHeight]);
+            self.mFrontView.alpha = frontViewAlpha;
         }
 
         if (self.mState == CFHScrollableStateScrolling) {
