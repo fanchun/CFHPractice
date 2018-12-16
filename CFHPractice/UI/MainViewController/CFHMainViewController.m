@@ -46,6 +46,7 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
 @property (assign, nonatomic) NSUInteger mCurrentPlantDataOffset;
 
 @property (strong, nonatomic) UIPanGestureRecognizer *mPanGesture;
+@property (strong, nonatomic) UISwipeGestureRecognizer *mSwipeGesture;
 
 @property (assign, nonatomic) CGFloat mPanOffsetY;
 @property (assign, nonatomic) CGFloat mOriginalTopConstraint;
@@ -54,7 +55,10 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
 @property (assign, nonatomic) CFHScrollableState mState;
 @end
 
-@implementation CFHMainViewController
+@implementation CFHMainViewController {
+    BOOL mPanGuestureActive;
+    CGFloat mTableViewContentOffsetY;
+}
 
 - (CGFloat)minTopViewHeight {
     return CGRectGetHeight(self.mFrontViewLabel.bounds);
@@ -141,12 +145,13 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
 - (CFHScrollableState)mState {
     CGFloat currentTopContraint = self.mTableViewTopConstraint.constant;
     if (currentTopContraint == [self minTopViewHeight]) {
-        return CFHScrollableStateClosed;
+        _mState =  CFHScrollableStateClosed;
     }else if (currentTopContraint == self.mOriginalTopConstraint){
-        return CFHScrollableStateOpened;
+        _mState =  CFHScrollableStateOpened;
     }else {
-        return CFHScrollableStateScrolling;
+        _mState =  CFHScrollableStateScrolling;
     }
+    return _mState;
 }
 
 #pragma mark - UIViewController
@@ -179,6 +184,50 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
     }
 }
 
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    mTableViewContentOffsetY = scrollView.contentOffset.y;
+}
+
+//- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+//    mTableViewContentOffsetY = scrollView.contentOffset.y;
+//}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGFloat contentOffsetY = scrollView.contentOffset.y;
+    if (!mPanGuestureActive) {
+//        NSLog(@"無手勢");
+        if (contentOffsetY > 0 && self.mState != CFHScrollableStateClosed) {
+
+            CGFloat deltaY = mTableViewContentOffsetY - contentOffsetY;
+
+            CGFloat updateTopConstraint = (self.mTableViewTopConstraint.constant + deltaY);
+
+            if (updateTopConstraint < [self minTopViewHeight]) {
+                // 閉合
+                [self closeTopView];
+            }else if (updateTopConstraint > self.mOriginalTopConstraint) {
+                // 展開
+                [self openTopView];
+            }else {
+                // 移動中
+                self.mTableViewTopConstraint.constant = updateTopConstraint;
+
+                // Animation
+                // BottomView
+                CGFloat bottomViewAlpha = ((updateTopConstraint - [self minTopViewHeight]) / (self.mOriginalTopConstraint- [self minTopViewHeight]));
+                self.mBottomView.alpha = bottomViewAlpha;
+
+                // FrontViewAlpha
+                CGFloat frontViewAlpha = (self.mOriginalTopConstraint/2 - updateTopConstraint) / (self.mOriginalTopConstraint/2 - [self minTopViewHeight]);
+                self.mFrontView.alpha = frontViewAlpha;
+            }
+        }
+        if (self.mState == CFHScrollableStateScrolling) {
+            [self.mTableView setContentOffset:CGPointZero];
+        }
+    }
+}
+
 #pragma mark - WebService API
 
 - (void)getPlantDataListWithLimit:(NSUInteger)limit {
@@ -201,10 +250,10 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
             [self.mTableView insertRowsAtIndexPaths:arIndexPaths withRowAnimation:UITableViewRowAnimationNone];
         }];
         
-        NSLog(@"====================");
-        NSLog(@"全部共%lu筆", self.mTotalPlantDataCount);
-        NSLog(@"已顯示%lu筆", self.mDataResultsArray.count);
-        NSLog(@"====================");
+//        NSLog(@"====================");
+//        NSLog(@"全部共%lu筆", self.mTotalPlantDataCount);
+//        NSLog(@"已顯示%lu筆", self.mDataResultsArray.count);
+//        NSLog(@"====================");
         
     } failure:^(NSError * _Nonnull error) {
         
@@ -217,11 +266,16 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
 #pragma mark - Pan Gesture
 
 - (void)handlePan:(UIPanGestureRecognizer *)gesture {
+    
+    mPanGuestureActive = (gesture.state != UIGestureRecognizerStateEnded &&
+                         gesture.state != UIGestureRecognizerStateCancelled);
+    
     CGPoint transaction = [gesture translationInView:self.mTableView.superview];
     CGFloat transactionY = transaction.y;
     
-    //    NSLog(@"TransacitonY = %f & state = %ld", transactionY, (long)gesture.state);
-    //    NSLog(@"ContentOffsetY = %f", self.targetScrollView.contentOffset.y);
+//    NSLog(@"TransacitonY = %f & state = %ld", transactionY, (long)gesture.state);
+//    NSLog(@"ContentOffsetY = %f", self.mTableView.contentOffset.y);
+    
     if (gesture.state == UIGestureRecognizerStateBegan)
     {
         _mPanOffsetY = transactionY;
@@ -268,12 +322,6 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
         }
         
         _mPanOffsetY = transactionY;
-//    }else {
-//        NSLog(@"ContentOffsetY = %f", self.targetScrollView.contentOffset.y);
-//        if (self.mState != CFHScrollableViewStateClosed && self.targetScrollView.contentOffset.y > 0) {
-//            [self closeViewWithAnimated:YES];
-//            return;
-//        }
     }
 }
 
@@ -282,4 +330,5 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     return YES;
 }
+
 @end
