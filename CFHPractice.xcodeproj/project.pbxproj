@@ -20,6 +20,7 @@
 		6776288D21C3FB9000321E03 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6776288C21C3FB9000321E03 /* main.m */; };
 		6776289921C3FC0E00321E03 /* CFHMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6776289721C3FC0E00321E03 /* CFHMainViewController.m */; };
 		6776289A21C3FC0E00321E03 /* CFHMainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6776289821C3FC0E00321E03 /* CFHMainViewController.xib */; };
+		67E9F21321C4EDE700D93E93 /* CFHScrollableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 67E9F21221C4EDE700D93E93 /* CFHScrollableView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,8 @@
 		6776289621C3FC0E00321E03 /* CFHMainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CFHMainViewController.h; sourceTree = "<group>"; };
 		6776289721C3FC0E00321E03 /* CFHMainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CFHMainViewController.m; sourceTree = "<group>"; };
 		6776289821C3FC0E00321E03 /* CFHMainViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CFHMainViewController.xib; sourceTree = "<group>"; };
+		67E9F21121C4EDE700D93E93 /* CFHScrollableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CFHScrollableView.h; sourceTree = "<group>"; };
+		67E9F21221C4EDE700D93E93 /* CFHScrollableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CFHScrollableView.m; sourceTree = "<group>"; };
 		92ACCEED965FDF33AE2E0D21 /* Pods-CFHPractice.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CFHPractice.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CFHPractice/Pods-CFHPractice.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -151,6 +154,8 @@
 			children = (
 				672C330921C4CAF60042B40F /* MainTableViewCell */,
 				6776289421C3FBF200321E03 /* MainViewController */,
+				67E9F21121C4EDE700D93E93 /* CFHScrollableView.h */,
+				67E9F21221C4EDE700D93E93 /* CFHScrollableView.m */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -293,6 +298,7 @@
 				672C330D21C4CBDA0042B40F /* CFHArrayDataSource.m in Sources */,
 				6776287F21C3FB8E00321E03 /* AppDelegate.m in Sources */,
 				672C330121C4A3010042B40F /* DTPlantInfo.m in Sources */,
+				67E9F21321C4EDE700D93E93 /* CFHScrollableView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

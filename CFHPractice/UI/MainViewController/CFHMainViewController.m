@@ -10,30 +10,72 @@
 #import "DTGetPlantDataListRequest.h"
 #import "CFHArrayDataSource.h"
 #import "CFHMainTableViewCell.h"
+//#import "CFHScrollableView.h"
 
 #import <SVProgressHUD.h>
 #import <UIImageView+AFNetworking.h>
 
+typedef NS_ENUM(NSInteger, CFHScrollableDirection) {
+    CFHScrollableDirectionNone,
+    CFHScrollableDirectionUp,
+    CFHScrollableDirectionDown
+};
+
+typedef NS_ENUM(NSInteger, CFHScrollableState) {
+    CFHScrollableStateScrolling,
+    CFHScrollableStateOpened,
+    CFHScrollableStateClosed,
+};
+
 static const NSInteger DTGetPlantDataDefaultLimit = 20;
 
-@interface CFHMainViewController () <UITableViewDelegate, UIScrollViewDelegate>
+@interface CFHMainViewController () <UITableViewDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *mTableView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *mTableViewTopConstraint;
+
 @property (weak, nonatomic) IBOutlet UIView *mBottomView;
+
+@property (weak, nonatomic) IBOutlet UIView *mFrontView;
+@property (weak, nonatomic) IBOutlet UILabel *mFrontViewLabel;
 
 @property (strong, nonatomic) NSMutableArray *mDataResultsArray;
 @property (strong, nonatomic) CFHArrayDataSource *mArrayDataSource;
 
-
 @property (assign, nonatomic) NSUInteger mTotalPlantDataCount;
 @property (assign, nonatomic) NSUInteger mCurrentPlantDataOffset;
+
+@property (strong, nonatomic) UIPanGestureRecognizer *mPanGesture;
+
+@property (assign, nonatomic) CGFloat mPanOffsetY;
+@property (assign, nonatomic) CGFloat mOriginalTopConstraint;
+
+@property (assign, nonatomic) CFHScrollableDirection mDirection;
+@property (assign, nonatomic) CFHScrollableState mState;
 @end
 
 @implementation CFHMainViewController
 
+- (CGFloat)minTopViewHeight {
+    return CGRectGetHeight(self.mFrontViewLabel.bounds);
+}
+
+- (void)closeTopView {
+    self.mDirection = CFHScrollableDirectionNone;
+    self.mTableViewTopConstraint.constant = 44;
+}
+
+- (void)openTopView {
+    _mDirection = CFHScrollableDirectionNone;
+    self.mTableViewTopConstraint.constant = self.mOriginalTopConstraint;
+}
+
 - (void)initParameters {
     _mTotalPlantDataCount = 0;
     _mCurrentPlantDataOffset = 0;
+    
+    _mDirection = CFHScrollableDirectionNone;
+    _mState = CFHScrollableStateOpened;
 }
 
 - (void)setupTableView {
@@ -67,6 +109,13 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
     self.mTableView.rowHeight = UITableViewAutomaticDimension;
     self.mTableView.estimatedRowHeight = CFHMainTableViewCellSize.height;
     self.mTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    
+    
+    self.mPanGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+    self.mPanGesture.maximumNumberOfTouches = 1;
+    self.mPanGesture.delegate = self;
+    self.mPanGesture.cancelsTouchesInView = NO;
+    [self.mTableView addGestureRecognizer:self.mPanGesture];
 }
 
 #pragma mark - Property
@@ -84,12 +133,27 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
     }
 }
 
+- (CFHScrollableState)mState {
+    CGFloat currentTopContraint = self.mTableViewTopConstraint.constant;
+    if (currentTopContraint == [self minTopViewHeight]) {
+        return CFHScrollableStateClosed;
+    }else if (currentTopContraint == self.mOriginalTopConstraint){
+        return CFHScrollableStateOpened;
+    }else {
+        return CFHScrollableStateScrolling;
+    }
+}
+
 #pragma mark - UIViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initParameters];
     [self setupTableView];
+    
+    self.mOriginalTopConstraint = self.mTableViewTopConstraint.constant;
+    
+    //self.mFrontView.targetScrollView = self.mTableView;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -112,11 +176,9 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
 #pragma mark - WebService API
 
 - (void)getPlantDataListWithLimit:(NSUInteger)limit {
-//    [SVProgressHUD show];
     DTGetPlantDataListRequest *request = [[DTGetPlantDataListRequest alloc] initWithLimit:limit offset:self.mCurrentPlantDataOffset];
     [request getWSSuccess:^(DTGetPlantDataListResponse * _Nonnull response) {
-        
-        //[SVProgressHUD dismiss];
+
         self.mTotalPlantDataCount = response.count;
         
 //        [self.mDataResultsArray addObjectsFromArray:response.plantInfos];
@@ -145,4 +207,63 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
     self.mCurrentPlantDataOffset += limit;
 }
 
+#pragma mark - Pan Gesture
+
+- (void)handlePan:(UIPanGestureRecognizer *)gesture {
+    CGPoint transaction = [gesture translationInView:self.mTableView.superview];
+    CGFloat transactionY = transaction.y;
+    
+    //    NSLog(@"TransacitonY = %f & state = %ld", transactionY, (long)gesture.state);
+    //    NSLog(@"ContentOffsetY = %f", self.targetScrollView.contentOffset.y);
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        
+        _mPanOffsetY = transactionY;
+        _mDirection = CFHScrollableDirectionNone;
+        
+    }else if (gesture.state == UIGestureRecognizerStateChanged) {
+        
+        CGFloat deltaY = (transactionY - _mPanOffsetY);
+        if (deltaY > 0.0) {
+            _mDirection = CFHScrollableDirectionDown;
+        }else {
+            _mDirection = CFHScrollableDirectionUp;
+        }
+        
+        if (self.mState == CFHScrollableStateClosed && self.mTableView.contentOffset.y > 0) {
+            self.mDirection = CFHScrollableDirectionNone;
+            return;
+        }
+        
+        CGFloat updateTopConstraint = (self.mTableViewTopConstraint.constant + deltaY);
+
+        if (updateTopConstraint < [self minTopViewHeight]) {
+            // 閉合
+            [self closeTopView];
+        }else if (updateTopConstraint > self.mOriginalTopConstraint) {
+            // 展開
+            [self openTopView];
+        }else {
+            // 移動中
+            self.mTableViewTopConstraint.constant = updateTopConstraint;
+        }
+
+        if (self.mState == CFHScrollableStateScrolling) {
+            [self.mTableView setContentOffset:CGPointZero];
+        }
+        
+        _mPanOffsetY = transactionY;
+//    }else {
+//        NSLog(@"ContentOffsetY = %f", self.targetScrollView.contentOffset.y);
+//        if (self.mState != CFHScrollableViewStateClosed && self.targetScrollView.contentOffset.y > 0) {
+//            [self closeViewWithAnimated:YES];
+//            return;
+//        }
+    }
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
 @end
