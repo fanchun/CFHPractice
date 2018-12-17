@@ -185,7 +185,9 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    mTableViewContentOffsetY = scrollView.contentOffset.y;
+    if (scrollView == self.mTableView) {
+        mTableViewContentOffsetY = scrollView.contentOffset.y;
+    }
 }
 
 //- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
@@ -193,38 +195,44 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
 //}
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGFloat contentOffsetY = scrollView.contentOffset.y;
-    if (!mPanGuestureActive) {
-//        NSLog(@"無手勢");
-        if (contentOffsetY > 0 && self.mState != CFHScrollableStateClosed) {
-
+    
+    if (scrollView == self.mTableView) {
+        CGFloat contentOffsetY = scrollView.contentOffset.y;
+        if (!mPanGuestureActive) {
             CGFloat deltaY = mTableViewContentOffsetY - contentOffsetY;
-
-            CGFloat updateTopConstraint = (self.mTableViewTopConstraint.constant + deltaY);
-
-            if (updateTopConstraint < [self minTopViewHeight]) {
-                // 閉合
-                [self closeTopView];
-            }else if (updateTopConstraint > self.mOriginalTopConstraint) {
-                // 展開
-                [self openTopView];
-            }else {
-                // 移動中
-                self.mTableViewTopConstraint.constant = updateTopConstraint;
-
-                // Animation
-                // BottomView
-                CGFloat bottomViewAlpha = ((updateTopConstraint - [self minTopViewHeight]) / (self.mOriginalTopConstraint- [self minTopViewHeight]));
-                self.mBottomView.alpha = bottomViewAlpha;
-
-                // FrontViewAlpha
-                CGFloat frontViewAlpha = (self.mOriginalTopConstraint/2 - updateTopConstraint) / (self.mOriginalTopConstraint/2 - [self minTopViewHeight]);
-                self.mFrontView.alpha = frontViewAlpha;
+            if (self.mState != CFHScrollableStateClosed &&
+                contentOffsetY > 0 &&
+                deltaY <=  0.0f )
+            {
+                NSLog(@"滑動更新");
+                CGFloat updateTopConstraint = (self.mTableViewTopConstraint.constant + deltaY);
+                
+                if (updateTopConstraint < [self minTopViewHeight]) {
+                    // 閉合
+                    [self closeTopView];
+                }else if (updateTopConstraint > self.mOriginalTopConstraint) {
+                    // 展開
+                    [self openTopView];
+                }else {
+                    // 移動中
+                    self.mTableViewTopConstraint.constant = updateTopConstraint;
+                    
+                    // Animation
+                    // BottomView
+                    CGFloat bottomViewAlpha = ((updateTopConstraint - [self minTopViewHeight]) / (self.mOriginalTopConstraint- [self minTopViewHeight]));
+                    self.mBottomView.alpha = bottomViewAlpha;
+                    
+                    // FrontViewAlpha
+                    CGFloat frontViewAlpha = (self.mOriginalTopConstraint/2 - updateTopConstraint) / (self.mOriginalTopConstraint/2 - [self minTopViewHeight]);
+                    self.mFrontView.alpha = frontViewAlpha;
+                }
+            }
+            if (self.mState == CFHScrollableStateScrolling) {
+                [self.mTableView setContentOffset:CGPointZero];
             }
         }
-        if (self.mState == CFHScrollableStateScrolling) {
-            [self.mTableView setContentOffset:CGPointZero];
-        }
+        
+        mTableViewContentOffsetY = scrollView.contentOffset.y;
     }
 }
 
