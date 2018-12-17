@@ -65,20 +65,26 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
     return CGRectGetHeight(self.mFrontViewLabel.bounds);
 }
 
-- (void)closeTopView {
+- (void)closeTopViewWithAnimated:(BOOL)animated {
     self.mDirection = CFHScrollableDirectionNone;
-    self.mTableViewTopConstraint.constant = [self minTopViewHeight];
     
-    self.mBottomView.alpha = 0;
-    self.mFrontView.alpha = 1;
+    NSTimeInterval duration = (animated) ? 0.15 : 0;
+    [UIView animateWithDuration:duration animations:^{
+        self.mTableViewTopConstraint.constant = [self minTopViewHeight];
+        self.mBottomView.alpha = 0;
+        self.mFrontView.alpha = 1;
+    }];
 }
 
-- (void)openTopView {
+- (void)openTopViewWithAnimated:(BOOL)animated {
     _mDirection = CFHScrollableDirectionNone;
-    self.mTableViewTopConstraint.constant = self.mOriginalTopConstraint;
     
-    self.mBottomView.alpha = 1;
-    self.mFrontView.alpha = 0;
+    NSTimeInterval duration = (animated) ? 0.15 : 0;
+    [UIView animateWithDuration:duration animations:^{
+        self.mTableViewTopConstraint.constant = self.mOriginalTopConstraint;
+        self.mBottomView.alpha = 1;
+        self.mFrontView.alpha = 0;
+    }];
 }
 
 - (void)initParameters {
@@ -163,7 +169,7 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
     [self setupTableView];
     
     self.mOriginalTopConstraint = self.mTableViewTopConstraint.constant;
-    [self openTopView];
+    [self openTopViewWithAnimated:NO];
     
     //self.mFrontView.targetScrollView = self.mTableView;
 }
@@ -178,9 +184,9 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
 - (void)scrollingStopped {
     if (self.mState == CFHScrollableStateScrolling) {
         if (self.mTableViewTopConstraint.constant > self.mOriginalTopConstraint/2) {
-            [self openTopView];
+            [self openTopViewWithAnimated:YES];
         }else {
-            [self closeTopView];
+            [self closeTopViewWithAnimated:YES];
         }
     }
 }
@@ -232,10 +238,10 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
                 
                 if (updateTopConstraint < [self minTopViewHeight]) {
                     // 閉合
-                    [self closeTopView];
+                    [self closeTopViewWithAnimated:NO];
                 }else if (updateTopConstraint > self.mOriginalTopConstraint) {
                     // 展開
-                    [self openTopView];
+                    [self openTopViewWithAnimated:NO];
                 }else {
                     // 移動中
                     self.mTableViewTopConstraint.constant = updateTopConstraint;
@@ -330,10 +336,10 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
 
         if (updateTopConstraint < [self minTopViewHeight]) {
             // 閉合
-            [self closeTopView];
+            [self closeTopViewWithAnimated:NO];
         }else if (updateTopConstraint > self.mOriginalTopConstraint) {
             // 展開
-            [self openTopView];
+            [self openTopViewWithAnimated:NO];
         }else {
             // 移動中
             self.mTableViewTopConstraint.constant = updateTopConstraint;
