@@ -236,24 +236,13 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
             {
                 CGFloat updateTopConstraint = (self.mTableViewTopConstraint.constant + deltaY);
                 
-                if (updateTopConstraint < [self minTopViewHeight]) {
+                if (updateTopConstraint <= self.mOriginalTopConstraint / 2) {
                     // 閉合
-                    [self closeTopViewWithAnimated:NO];
-                }else if (updateTopConstraint > self.mOriginalTopConstraint) {
-                    // 展開
-                    [self openTopViewWithAnimated:NO];
+                    [self closeTopViewWithAnimated:YES];
                 }else {
-                    // 移動中
-                    self.mTableViewTopConstraint.constant = updateTopConstraint;
-                    
-                    // Animation
-                    // BottomView
-                    CGFloat bottomViewAlpha = ((updateTopConstraint - [self minTopViewHeight]) / (self.mOriginalTopConstraint- [self minTopViewHeight]));
-                    self.mBottomView.alpha = bottomViewAlpha;
-                    
-                    // FrontViewAlpha
-                    CGFloat frontViewAlpha = (self.mOriginalTopConstraint/2 - updateTopConstraint) / (self.mOriginalTopConstraint/2 - [self minTopViewHeight]);
-                    self.mFrontView.alpha = frontViewAlpha;
+                    // 展開
+                    [self openTopViewWithAnimated:YES];
+                    [self.mTableView setContentOffset:CGPointZero];
                 }
             }
             if (self.mState == CFHScrollableStateScrolling) {
