@@ -58,6 +58,7 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
 @implementation CFHMainViewController {
     BOOL mPanGuestureActive;
     CGFloat mTableViewContentOffsetY;
+    BOOL mScrollingStart;
 }
 
 - (CGFloat)minTopViewHeight {
@@ -174,37 +175,59 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
 
 #pragma mark - UIScrollViewDelegate
 
+- (void)scrollingStopped {
+    if (self.mState == CFHScrollableStateScrolling) {
+        if (self.mTableViewTopConstraint.constant > self.mOriginalTopConstraint/2) {
+            [self openTopView];
+        }else {
+            [self closeTopView];
+        }
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if (!decelerate) {
+        if (mScrollingStart) {
+            mScrollingStart = NO;
+            [self scrollingStopped];
+        }
+    }
+}
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    if (mScrollingStart) {
+        mScrollingStart = NO;
+        [self scrollingStopped];
+    }
+}
+
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
-    if (velocity.y > 0){
-        NSUInteger remainDataCount = (self.mTotalPlantDataCount - self.mCurrentPlantDataOffset);
-        if (remainDataCount > 0) {
-            NSUInteger limit = (remainDataCount > DTGetPlantDataDefaultLimit) ? DTGetPlantDataDefaultLimit : remainDataCount;
-            [self getPlantDataListWithLimit:limit];
+    if (scrollView == self.mTableView) {
+        if (velocity.y > 0){
+            NSUInteger remainDataCount = (self.mTotalPlantDataCount - self.mCurrentPlantDataOffset);
+            if (remainDataCount > 0) {
+                NSUInteger limit = (remainDataCount > DTGetPlantDataDefaultLimit) ? DTGetPlantDataDefaultLimit : remainDataCount;
+                [self getPlantDataListWithLimit:limit];
+            }
         }
     }
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     if (scrollView == self.mTableView) {
+        mScrollingStart = YES;
         mTableViewContentOffsetY = scrollView.contentOffset.y;
     }
 }
 
-//- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-//    mTableViewContentOffsetY = scrollView.contentOffset.y;
-//}
-
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
     if (scrollView == self.mTableView) {
+        mScrollingStart = YES;
         CGFloat contentOffsetY = scrollView.contentOffset.y;
         if (!mPanGuestureActive) {
             CGFloat deltaY = mTableViewContentOffsetY - contentOffsetY;
-            if (self.mState != CFHScrollableStateClosed &&
-                contentOffsetY > 0 &&
-                deltaY <=  0.0f )
+            if (self.mState != CFHScrollableStateClosed && contentOffsetY > 0 && deltaY <=  0 )
             {
-                NSLog(@"滑動更新");
                 CGFloat updateTopConstraint = (self.mTableViewTopConstraint.constant + deltaY);
                 
                 if (updateTopConstraint < [self minTopViewHeight]) {
@@ -292,7 +315,7 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
     else if (gesture.state == UIGestureRecognizerStateChanged)
     {
         CGFloat deltaY = (transactionY - _mPanOffsetY);
-        if (deltaY > 0.0) {
+        if (deltaY > 0) {
             _mDirection = CFHScrollableDirectionDown;
         }else {
             _mDirection = CFHScrollableDirectionUp;
