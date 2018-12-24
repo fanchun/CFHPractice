@@ -28,6 +28,7 @@ typedef NS_ENUM(NSInteger, CFHScrollableState) {
 };
 
 static const NSInteger DTGetPlantDataDefaultLimit = 20;
+static const NSTimeInterval FCHAnimationTimeInterval = 0.2;
 
 @interface CFHMainViewController () <UITableViewDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate>
 
@@ -68,22 +69,26 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
 - (void)closeTopViewWithAnimated:(BOOL)animated {
     self.mDirection = CFHScrollableDirectionNone;
     
-    NSTimeInterval duration = (animated) ? 0.15 : 0;
+    [self.mTableView layoutIfNeeded];
+    NSTimeInterval duration = (animated) ? FCHAnimationTimeInterval : 0;
     [UIView animateWithDuration:duration animations:^{
         self.mTableViewTopConstraint.constant = [self minTopViewHeight];
         self.mBottomView.alpha = 0;
         self.mFrontView.alpha = 1;
+        [self.mTableView layoutIfNeeded];
     }];
 }
 
 - (void)openTopViewWithAnimated:(BOOL)animated {
     _mDirection = CFHScrollableDirectionNone;
     
-    NSTimeInterval duration = (animated) ? 0.15 : 0;
+    [self.mTableView layoutIfNeeded];
+    NSTimeInterval duration = (animated) ? FCHAnimationTimeInterval : 0;
     [UIView animateWithDuration:duration animations:^{
         self.mTableViewTopConstraint.constant = self.mOriginalTopConstraint;
         self.mBottomView.alpha = 1;
         self.mFrontView.alpha = 0;
+        [self.mTableView layoutIfNeeded];
     }];
 }
 
@@ -236,24 +241,13 @@ static const NSInteger DTGetPlantDataDefaultLimit = 20;
             {
                 CGFloat updateTopConstraint = (self.mTableViewTopConstraint.constant + deltaY);
                 
-                if (updateTopConstraint < [self minTopViewHeight]) {
+                if (updateTopConstraint <= self.mOriginalTopConstraint / 2) {
                     // 閉合
-                    [self closeTopViewWithAnimated:NO];
-                }else if (updateTopConstraint > self.mOriginalTopConstraint) {
-                    // 展開
-                    [self openTopViewWithAnimated:NO];
+                    [self closeTopViewWithAnimated:YES];
                 }else {
-                    // 移動中
-                    self.mTableViewTopConstraint.constant = updateTopConstraint;
-                    
-                    // Animation
-                    // BottomView
-                    CGFloat bottomViewAlpha = ((updateTopConstraint - [self minTopViewHeight]) / (self.mOriginalTopConstraint- [self minTopViewHeight]));
-                    self.mBottomView.alpha = bottomViewAlpha;
-                    
-                    // FrontViewAlpha
-                    CGFloat frontViewAlpha = (self.mOriginalTopConstraint/2 - updateTopConstraint) / (self.mOriginalTopConstraint/2 - [self minTopViewHeight]);
-                    self.mFrontView.alpha = frontViewAlpha;
+                    // 展開
+                    [self openTopViewWithAnimated:YES];
+                    [self.mTableView setContentOffset:CGPointZero];
                 }
             }
             if (self.mState == CFHScrollableStateScrolling) {
