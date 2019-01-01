@@ -8,10 +8,13 @@
 
 #import "CFHMainTableViewCell.h"
 
+NSString * const CFHMainTableViewCellIndentifier = @"CFHMainTableViewCell";
+const CGSize CFHMainTableViewCellSize = {375, 144};
+
 @implementation CFHMainTableViewCell
 
 + (UINib *)nib {
-    return [UINib nibWithNibName:@"CFHMainTableViewCell" bundle:nil];
+    return [UINib nibWithNibName:CFHMainTableViewCellIndentifier bundle:nil];
 }
 
 - (void)awakeFromNib {

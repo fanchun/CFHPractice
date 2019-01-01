@@ -27,8 +27,8 @@ typedef NS_ENUM(NSInteger, CFHScrollableState) {
     CFHScrollableStateClosed,
 };
 
-static const NSInteger DTGetPlantDataDefaultLimit = 20;
-static const NSTimeInterval FCHAnimationTimeInterval = 0.2;
+static const NSInteger      kGetPlantDataDefaultLimit = 20;
+static const NSTimeInterval kAnimationDuration = 0.2;
 
 @interface CFHMainViewController () <UITableViewDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate>
 
@@ -70,7 +70,7 @@ static const NSTimeInterval FCHAnimationTimeInterval = 0.2;
     self.mDirection = CFHScrollableDirectionNone;
     
     [self.mTableView layoutIfNeeded];
-    NSTimeInterval duration = (animated) ? FCHAnimationTimeInterval : 0;
+    NSTimeInterval duration = (animated) ? kAnimationDuration : 0;
     [UIView animateWithDuration:duration animations:^{
         self.mTableViewTopConstraint.constant = [self minTopViewHeight];
         self.mBottomView.alpha = 0;
@@ -83,7 +83,7 @@ static const NSTimeInterval FCHAnimationTimeInterval = 0.2;
     _mDirection = CFHScrollableDirectionNone;
     
     [self.mTableView layoutIfNeeded];
-    NSTimeInterval duration = (animated) ? FCHAnimationTimeInterval : 0;
+    NSTimeInterval duration = (animated) ? kAnimationDuration : 0;
     [UIView animateWithDuration:duration animations:^{
         self.mTableViewTopConstraint.constant = self.mOriginalTopConstraint;
         self.mBottomView.alpha = 1;
@@ -181,7 +181,7 @@ static const NSTimeInterval FCHAnimationTimeInterval = 0.2;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self getPlantDataListWithLimit:DTGetPlantDataDefaultLimit];
+    [self getPlantDataListWithLimit:kGetPlantDataDefaultLimit];
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -216,7 +216,7 @@ static const NSTimeInterval FCHAnimationTimeInterval = 0.2;
         if (velocity.y > 0){
             NSUInteger remainDataCount = (self.mTotalPlantDataCount - self.mCurrentPlantDataOffset);
             if (remainDataCount > 0) {
-                NSUInteger limit = (remainDataCount > DTGetPlantDataDefaultLimit) ? DTGetPlantDataDefaultLimit : remainDataCount;
+                NSUInteger limit = (remainDataCount > kGetPlantDataDefaultLimit) ? kGetPlantDataDefaultLimit : remainDataCount;
                 [self getPlantDataListWithLimit:limit];
             }
         }

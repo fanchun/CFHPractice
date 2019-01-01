@@ -8,7 +8,7 @@
 
 #import "CFHScrollableView.h"
 
-static const NSTimeInterval CFHAnimateTimeDuration = 0.1;
+static const NSTimeInterval kAnimationDuration = 0.2;
 
 typedef NS_ENUM(NSInteger, CFHScrollableDirection) {
     CFHScrollableDirectionNone,
@@ -61,7 +61,7 @@ typedef NS_ENUM(NSInteger, CFHScrollableViewState) {
     CGRect viewFrame = self.frame;
     viewFrame.size.height = height;
     if (animated) {
-        [UIView animateWithDuration:CFHAnimateTimeDuration
+        [UIView animateWithDuration:kAnimationDuration
                          animations:^{
                              self.frame = viewFrame;
                          }];

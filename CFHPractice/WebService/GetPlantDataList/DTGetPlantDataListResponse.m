@@ -8,22 +8,24 @@
 
 #import "DTGetPlantDataListResponse.h"
 
-static NSString * const kDTGetPlantDataListRespCount    = @"count";
-static NSString * const kDTGetPlantDataListRespLimit    = @"limit";
-static NSString * const kDTGetPlantDataListRespOffset   = @"offset";
-static NSString * const kDTGetPlantDataListRespResults  = @"results";
+NSString * const DTGetPlantDataListResponseResult = @"result";
+
+static NSString * const kCount      = @"count";
+static NSString * const kLimit      = @"limit";
+static NSString * const kOffset     = @"offset";
+static NSString * const kResults    = @"results";
 
 @implementation DTGetPlantDataListResponse
 
 - (instancetype)initWithResult:(NSDictionary *)result {
     self = [super init];
     if (self) {
-        _count  = [result[kDTGetPlantDataListRespCount] unsignedIntegerValue];
-        _limit  = [result[kDTGetPlantDataListRespLimit] unsignedIntegerValue];
-        _offset = [result[kDTGetPlantDataListRespOffset] unsignedIntegerValue];
+        _count  = [result[kCount] unsignedIntegerValue];
+        _limit  = [result[kLimit] unsignedIntegerValue];
+        _offset = [result[kOffset] unsignedIntegerValue];
         
         NSMutableArray *arPlantInfos = [NSMutableArray arrayWithCapacity:_count];
-        for (NSDictionary *dicPlantInfo in result[kDTGetPlantDataListRespResults]) {
+        for (NSDictionary *dicPlantInfo in result[kResults]) {
             DTPlantInfo *plantInfo = [[DTPlantInfo alloc] initWithResult:dicPlantInfo];
             [arPlantInfos addObject:plantInfo];
         }

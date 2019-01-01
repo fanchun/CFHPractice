@@ -9,20 +9,20 @@
 #import "DTPlantInfo.h"
 
 // Key
-static NSString * const kDTPlantInfoNameCh      = @"F_Name_Ch";
-static NSString * const kDTPlantInfoFeature     = @"F_Feature";
-static NSString * const kDTPlantInfoLocation    = @"F_Location";
-static NSString * const kDTPlantInfoPic01URL    = @"F_Pic01_URL";
+static NSString * const kNameCh     = @"F_Name_Ch";
+static NSString * const kFeature    = @"F_Feature";
+static NSString * const kLocation   = @"F_Location";
+static NSString * const kPic01URL   = @"F_Pic01_URL";
 
 @implementation DTPlantInfo
 
 - (instancetype)initWithResult:(NSDictionary *)result {
     self = [super init];
     if (self) {
-        _nameCh     = result[kDTPlantInfoNameCh];
-        _feature    = result[kDTPlantInfoFeature];
-        _location   = result[kDTPlantInfoLocation];
-        _pictureURL = result[kDTPlantInfoPic01URL];
+        _nameCh     = result[kNameCh];
+        _feature    = result[kFeature];
+        _location   = result[kLocation];
+        _pictureURL = result[kPic01URL];
     }
     return self;
 }

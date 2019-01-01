@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "DTPlantInfo.h"
 
+extern NSString * const DTGetPlantDataListResponseResult;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DTGetPlantDataListResponse : NSObject

@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-static NSString * const CFHMainTableViewCellIndentifier = @"CFHMainTableViewCell";
-static CGSize const CFHMainTableViewCellSize = {375, 144};
+extern NSString * const CFHMainTableViewCellIndentifier;
+extern const CGSize CFHMainTableViewCellSize;
 
 NS_ASSUME_NONNULL_BEGIN
 
